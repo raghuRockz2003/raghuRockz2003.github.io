@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rice Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Rice Bag Inventory</h1>
+        </header>
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a class="button" href="{{ url_for('routes.add_rice_bag') }}">Add Rice Bag</a>
+            <a class="button" href="{{ url_for('routes.landing') }}">Go to Landing Page</a> <!-- Landing Page Link -->
+        </div>
+
+        <!-- Table displaying the rice bags -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Brand Name</th>
+                    <th>Category</th>
+                    <th>Weight (kg)</th>
+                    <th>Price (₹)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rice_bag in rice_bags %}
+                <tr>
+                    <td>{{ rice_bag.brand_name }}</td>
+                    <td>{{ rice_bag.category }}</td>
+                    <td>{{ rice_bag.weight }}</td>
+                    <td>{{ rice_bag.price }}</td>
+                    <td>
+                        <a href="{{ url_for('routes.edit_rice_bag', bag_id=rice_bag.id) }}">Edit</a>
+                        <form method="POST" action="{{ url_for('routes.delete_rice_bag', rice_bag_id=rice_bag.id) }}" style="display:inline;">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Export Button Section -->
+        <div class="export-section">
+            <a class="button" href="{{ url_for('routes.export_to_excel') }}">Export to Excel</a>
+        </div>
+        <!-- File Upload Section -->
+        <div class="upload-section">
+            <h2>Upload Rice Bags from Excel</h2>
+            <form action="{{ url_for('routes.upload_excel') }}" method="POST" enctype="multipart/form-data">
+                <div class="file-input">
+                    <input type="file" name="file" id="file" accept=".xlsx" required>
+                    <button type="submit" class="button">Upload Excel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Voice Input Section -->
+        <div class="voice-input-section">
+            <h2>Voice Input for Rice Bag</h2>
+            <button id="start-recording" class="button">Start Voice Input</button>
+            <input type="text" id="voice-input" placeholder="Your input will appear here..." readonly>
+        </div>
+    </div>
+
+    <!-- Add Voice Recognition Script -->
+    <script>
+        const startBtn = document.getElementById('start-recording');
+        const voiceInputField = document.getElementById('voice-input');
+
+        if ('webkitSpeechRecognition' in window) {
+            const recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            startBtn.addEventListener('click', () => {
+                recognition.start();
+            });
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                voiceInputField.value = transcript;
+            };
+
+            recognition.onerror = function(event) {
+                alert('Error occurred: ' + event.error);
+            };
+        } else {
+            alert('Your browser does not support voice recognition.');
+        }
+    </script>
+</body>
+</html>

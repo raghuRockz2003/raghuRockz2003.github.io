@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Rice Bag</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        // Voice Input Functionality
+        function enableVoiceInput(inputId) {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "en-US";
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById(inputId).value = transcript;
+            };
+
+            recognition.onerror = (event) => {
+                alert("Voice input failed. Please try again.");
+            };
+
+            recognition.start();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Add Rice Bag</h1>
+        <form method="POST" action="/add_rice_bag">
+            <div class="form-group">
+                <label for="bag_name">Bag Name</label>
+                <div style="display: flex; align-items: center;">
+                    <input type="text" id="bag_name" name="bag_name" placeholder="Enter bag name" required>
+                    <button type="button" onclick="enableVoiceInput('bag_name')" class="mic-button">
+                        🎤
+                    </button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="weight">Weight (kg)</label>
+                <div style="display: flex; align-items: center;">
+                    <input type="number" id="weight" name="weight" placeholder="Enter weight" required>
+                    <button type="button" onclick="enableVoiceInput('weight')" class="mic-button">
+                        🎤
+                    </button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="price">Price (₹)</label>
+                <div style="display: flex; align-items: center;">
+                    <input type="number" id="price" name="price" placeholder="Enter price" required>
+                    <button type="button" onclick="enableVoiceInput('price')" class="mic-button">
+                        🎤
+                    </button>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">Add Bag</button>
+        </form>
+    </div>
+
+    <!-- Smooth Redirection Script -->
+    <script>
+        // Show success message and redirect after submission
+        const form = document.querySelector("form");
+        form.onsubmit = function (event) {
+            event.preventDefault(); // Prevent form submission
+            const successMessage = document.createElement("div");
+            successMessage.textContent = "Rice Bag Added Successfully!";
+            successMessage.className = "success-message";
+            document.body.appendChild(successMessage);
+
+            setTimeout(() => {
+                window.location.href = "/"; // Redirect to home
+            }, 2000); // 2-second delay
+        };
+    </script>
+
+    <style>
+        /* Style for Voice Input Button */
+        .mic-button {
+            margin-left: 10px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Success Message Style */
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: fadeOut 2s forwards;
+        }
+
+        @keyframes fadeOut {
+            0%, 80% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        /* General Styles */
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: calc(100% - 50px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-submit:hover {
+            background-color: #45a049;
+        }
+    </style>
+</body>
+</html>

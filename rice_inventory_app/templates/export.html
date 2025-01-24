@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Export Data</h1>
+        <p>Click the button below to export all rice bag inventory data to an Excel file.</p>
+        <form action="{{ url_for('routes.export_to_excel') }}" method="GET">
+            <button type="submit" class="button">Export to Excel</button>
+        </form>
+        <a href="{{ url_for('routes.index') }}" class="button">Back to Inventory</a>
+    </div>
+</body>
+</html>
